@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-lazy-init="true"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+	<context:annotation-config />
+	<!-- <context:component-scan base-package="com.*.controller"></context:component-scan> -->
+	<!-- <bean
+		class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" /> -->
+	 
+	<bean id="SpringContextUtil" lazy-init="false" class="com.jd.framework.orm.util.SpringContextUtil" />
+	<!-- 数据源配置 -->  
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"  
+        init-method="init" destroy-method="close">  
+        
+        <!-- JDBC连接串 -->  
+        <property name="url"  
+            value="jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull&amp;transformedBitIsBoolean=true" />  
+        <!-- 数据库用户名称 -->  
+        <property name="username" value="root" />  
+        <!-- 数据库密码 -->  
+        <property name="password" value="client" />  
+        <!-- 连接池最大使用连接数量 -->  
+        <property name="maxActive" value="20" />  
+        <!-- 初始化大小 -->  
+        <property name="initialSize" value="5" />  
+        <!-- 获取连接最大等待时间 -->  
+        <property name="maxWait" value="60000" />  
+        <!-- 连接池最小空闲 -->  
+        <property name="minIdle" value="2" />  
+        <!-- 逐出连接的检测时间间隔 -->  
+        <property name="timeBetweenEvictionRunsMillis" value="3000" />  
+        <!-- 最小逐出时间 -->  
+        <property name="minEvictableIdleTimeMillis" value="300000" />  
+        <!-- 测试有效用的SQL Query -->  
+        <property name="validationQuery" value="SELECT 'x'" />  
+        <!-- 连接空闲时测试是否有效 -->  
+        <property name="testWhileIdle" value="true" />  
+        <!-- 获取连接时测试是否有效 -->  
+        <property name="testOnBorrow" value="false" />  
+        <!-- 归还连接时是否测试有效 -->  
+        <property name="testOnReturn" value="false" />  
+    </bean>
+    <!--orm 模板类  -->
+    <bean class="com.jd.framework.orm.template.JDOrmTemplate" id="dao" name="dao">
+     <property name="dataSource" ref="dataSource"></property>
+    </bean>
+    <bean id="BaseDaoImpl" name="BaseDaoImpl" class="com.jd.framework.orm.dao.impl.BaseDaoImpl">
+    	
+    </bean>
+    <!--BaseDaoImpl  -->
+    <bean id="CommonDaoSupport" name="CommonDaoSupport" class="com.jd.framework.orm.dao.support.impl.CommonDaoSupport" init-method="getDao">
+      <property name="dao" ref="dao"></property>
+    </bean>
+    
+    <bean id="DemoDaoImpl" name="DemoDaoImpl" class="test.jd.framework.orm.dao.impl.DemoDaoImpl"></bean>
+    
+    <bean id="DemoConnectDaoImpl" name="DemoConnectDaoImpl" class="test.jd.framework.orm.dao.impl.DemoConnectDaoImpl"></bean>
+    
+</beans>
